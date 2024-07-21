@@ -38,7 +38,6 @@ public class CirQueue {
     }
 
 
-
     public int dequeue() throws Exception{
         if (isEmpty()) {
             throw new Exception("Queue is empty");
