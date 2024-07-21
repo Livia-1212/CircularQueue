@@ -8,7 +8,6 @@ public class CirQueue {
     int[] nums;
     int size;
     final int CAPACITY;
-    int temp;
 
     public CirQueue(int initialSize) {
         this.nums = new int[initialSize];
@@ -20,36 +19,39 @@ public class CirQueue {
 
     public void enqueue(int data) {
         if (isEmpty()) {
-            front++;
-            rear++;
+            front= 0;
+            rear=0;
             size++;
         }
+
+        nums[rear] = data;
+        rear = (rear + 1) % nums.length;
 
         if(isFull()) {
             System.out.println("queue is full.");
-            rear = (rear + 1) % nums.length;
-            nums[rear] = data;
-        }else{
-            rear = (rear + 1) % nums.length;
-            nums[rear] = data;
+            size = CAPACITY;
+        }else {
             size++;
-
         }
+
 
     }
 
 
 
-    public int dequeue() {
+    public int dequeue() throws Exception{
         if (isEmpty()) {
-            size = 0;
-            return size;
-        }else {
+            throw new Exception("Queue is empty");
+        } else {
             int temp = nums[front];
+            nums[front] = Integer.MIN_VALUE;
             front = (front + 1) % nums.length;
             size--;
+            if (size==0)
+               front = rear = -1;
 
             return temp;
+
         }
     }
 
@@ -59,20 +61,18 @@ public class CirQueue {
         else return size;
     }
 
-    public int peek() {
+    public int peek() throws Exception {
         if (isEmpty())
-            throw new NoSuchElementException();
+            throw new Exception("No elements to peek");
         return nums[front];
     }
 
     public boolean isEmpty() {
-        return (front == -1);
+        return (size == 0);
     }
 
     public boolean isFull() {
-        if(rear>0)
-            return rear % nums.length == front;
-        return false;
+        return size == CAPACITY;
     }
 
     @Override
@@ -82,10 +82,13 @@ public class CirQueue {
         }
         StringBuilder kb = new StringBuilder();
         kb.append("[");
-        for (int i = front; (i+1)%nums.length <= rear && i<nums.length; i++) {
-            System.out.println("Current elem in toStr:"+nums[i]);
-            kb.append(nums[i]);
-            if (i < nums.length -1) {
+        for (int i = 0; i < CAPACITY; i++) {
+            if (nums[i] != Integer.MIN_VALUE) {
+                kb.append(nums[i]);
+            } else {
+                kb.append("_");
+            }
+            if (i < CAPACITY-1) {
                 kb.append(", ");
             }
         }
