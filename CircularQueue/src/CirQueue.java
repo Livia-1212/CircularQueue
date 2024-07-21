@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class CirQueue {
 
-    int front, rear;
+    int front,rear;
     int[] nums;
     int size;
     final int CAPACITY;
